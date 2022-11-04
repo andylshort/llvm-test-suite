@@ -87,8 +87,8 @@ int main() {
 
   {
     std::vector<int> ReferenceData = {2, 4, 6, 8, 10};
-    std::shared_ptr<int[]> DataPtr(new int[Size] { 0 });
-    std::shared_ptr<int[]> CopyBackDataPtr(new int[Size] { 0 });
+    std::shared_ptr<int[]> DataPtr(new int[Size]{0});
+    std::shared_ptr<int[]> CopyBackDataPtr(new int[Size]{0});
 
     sycl::buffer<int> Buf(DataPtr, sycl::range<1>(Size));
 
@@ -108,8 +108,8 @@ int main() {
     for (int i = 0; i < Size; ++i) {
       if (ReferenceData[i] != DataPtr.get()[i]) {
         std::cerr << "Incorrect result in copy(shared_ptr,acc) at index " << i
-                  << ": got " << DataPtr.get()[i] << ", expected " << ReferenceData[i]
-                  << std::endl;
+                  << ": got " << DataPtr.get()[i] << ", expected "
+                  << ReferenceData[i] << std::endl;
         return 1;
       }
     }
