@@ -30,9 +30,9 @@ int main() {
       sycl::buffer<int> DataBuffer(Data.data(), sycl::range<1>(Size));
 
       sycl::accessor<int, 1, sycl::access::mode::read_write,
-                    sycl::access::target::device,
-                    sycl::access::placeholder::true_t,
-                    sycl::ext::oneapi::accessor_property_list<>>
+                     sycl::access::target::device,
+                     sycl::access::placeholder::true_t,
+                     sycl::ext::oneapi::accessor_property_list<>>
           Acc(DataBuffer);
 
       Q.fill(Acc, FillValue);
@@ -59,9 +59,9 @@ int main() {
       sycl::buffer<int> Buf(Data.data(), sycl::range<1>(Size));
 
       sycl::accessor<int, 1, sycl::access::mode::read_write,
-                    sycl::access::target::device,
-                    sycl::access::placeholder::true_t,
-                    sycl::ext::oneapi::accessor_property_list<>>
+                     sycl::access::target::device,
+                     sycl::access::placeholder::true_t,
+                     sycl::ext::oneapi::accessor_property_list<>>
           Acc(Buf);
       Q.copy(ReferenceData.data(), Acc);
       Q.wait();
@@ -98,9 +98,9 @@ int main() {
       sycl::buffer<int> Buf(DataPtr, sycl::range<1>(Size));
 
       sycl::accessor<int, 1, sycl::access::mode::read_write,
-                    sycl::access::target::device,
-                    sycl::access::placeholder::true_t,
-                    sycl::ext::oneapi::accessor_property_list<>>
+                     sycl::access::target::device,
+                     sycl::access::placeholder::true_t,
+                     sycl::ext::oneapi::accessor_property_list<>>
           Acc(Buf);
       Q.copy(ReferenceData.data(), Acc);
       Q.wait();
@@ -137,14 +137,14 @@ int main() {
       sycl::buffer<int> DataBuf(Data.data(), sycl::range<1>(Size));
 
       sycl::accessor<int, 1, sycl::access::mode::read,
-                    sycl::access::target::device,
-                    sycl::access::placeholder::true_t,
-                    sycl::ext::oneapi::accessor_property_list<>>
+                     sycl::access::target::device,
+                     sycl::access::placeholder::true_t,
+                     sycl::ext::oneapi::accessor_property_list<>>
           RefAcc(RefBuf);
       sycl::accessor<int, 1, sycl::access::mode::write,
-                    sycl::access::target::device,
-                    sycl::access::placeholder::true_t,
-                    sycl::ext::oneapi::accessor_property_list<>>
+                     sycl::access::target::device,
+                     sycl::access::placeholder::true_t,
+                     sycl::ext::oneapi::accessor_property_list<>>
           DataAcc(DataBuf);
 
       Q.copy(RefAcc, DataAcc);
