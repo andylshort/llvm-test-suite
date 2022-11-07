@@ -26,17 +26,19 @@ int main() {
     const int FillValue = 42;
     std::vector<int> Data(Size, 0);
 
-    sycl::buffer<int> DataBuffer(Data.data(), sycl::range<1>(Size));
+    {
+      sycl::buffer<int> DataBuffer(Data.data(), sycl::range<1>(Size));
 
-    sycl::accessor<int, 1, sycl::access::mode::read_write,
-                   sycl::access::target::device,
-                   sycl::access::placeholder::true_t,
-                   sycl::ext::oneapi::accessor_property_list<>>
-        Acc(DataBuffer);
+      sycl::accessor<int, 1, sycl::access::mode::read_write,
+                    sycl::access::target::device,
+                    sycl::access::placeholder::true_t,
+                    sycl::ext::oneapi::accessor_property_list<>>
+          Acc(DataBuffer);
 
-    Q.fill(Acc, FillValue);
-    Q.update_host(Acc);
-    Q.wait();
+      Q.fill(Acc, FillValue);
+      Q.update_host(Acc);
+      Q.wait();
+    }
 
     for (int i = 0; i < Size; ++i) {
       if (Data[i] != FillValue) {
@@ -53,15 +55,20 @@ int main() {
     std::vector<int> Data(Size, 0);
     std::vector<int> CopyBackData(Size, 0);
 
-    sycl::buffer<int> Buf(Data.data(), sycl::range<1>(Size));
+    {
+      sycl::buffer<int> Buf(Data.data(), sycl::range<1>(Size));
 
-    sycl::accessor<int, 1, sycl::access::mode::read_write,
-                   sycl::access::target::device,
-                   sycl::access::placeholder::true_t,
-                   sycl::ext::oneapi::accessor_property_list<>>
-        Acc(Buf);
-    Q.copy(ReferenceData.data(), Acc);
-    Q.wait();
+      sycl::accessor<int, 1, sycl::access::mode::read_write,
+                    sycl::access::target::device,
+                    sycl::access::placeholder::true_t,
+                    sycl::ext::oneapi::accessor_property_list<>>
+          Acc(Buf);
+      Q.copy(ReferenceData.data(), Acc);
+      Q.wait();
+
+      Q.copy(Acc, CopyBackData.data());
+      Q.wait();
+    }
 
     for (int i = 0; i < Size; ++i) {
       if (ReferenceData[i] != Data[i]) {
@@ -71,9 +78,6 @@ int main() {
         return 1;
       }
     }
-
-    Q.copy(Acc, CopyBackData.data());
-    Q.wait();
 
     for (int i = 0; i < Size; ++i) {
       if (ReferenceData[i] != CopyBackData[i]) {
@@ -90,20 +94,20 @@ int main() {
     std::shared_ptr<int[]> DataPtr(new int[Size]{0});
     std::shared_ptr<int[]> CopyBackDataPtr(new int[Size]{0});
 
-    sycl::buffer<int> Buf(DataPtr, sycl::range<1>(Size));
+    {
+      sycl::buffer<int> Buf(DataPtr, sycl::range<1>(Size));
 
-    sycl::accessor<int, 1, sycl::access::mode::read_write,
-                   sycl::access::target::device,
-                   sycl::access::placeholder::true_t,
-                   sycl::ext::oneapi::accessor_property_list<>>
-        Acc(Buf);
-    Q.copy(ReferenceData.data(), Acc);
-    Q.wait();
+      sycl::accessor<int, 1, sycl::access::mode::read_write,
+                    sycl::access::target::device,
+                    sycl::access::placeholder::true_t,
+                    sycl::ext::oneapi::accessor_property_list<>>
+          Acc(Buf);
+      Q.copy(ReferenceData.data(), Acc);
+      Q.wait();
 
-    for (int i = 0; i < Size; ++i) {
-      std::cout << DataPtr.get()[i] << " ";
+      Q.copy(Acc, CopyBackDataPtr);
+      Q.wait();
     }
-    std::cout << std::endl;
 
     for (int i = 0; i < Size; ++i) {
       if (ReferenceData[i] != DataPtr.get()[i]) {
@@ -113,14 +117,6 @@ int main() {
         return 1;
       }
     }
-
-    Q.copy(Acc, CopyBackDataPtr);
-    Q.wait();
-
-    for (int i = 0; i < Size; ++i) {
-      std::cout << CopyBackDataPtr.get()[i] << " ";
-    }
-    std::cout << std::endl;
 
     for (int i = 0; i < Size; ++i) {
       if (ReferenceData[i] != CopyBackDataPtr.get()[i]) {
@@ -136,22 +132,24 @@ int main() {
     std::vector<int> ReferenceData = {3, 6, 9, 12, 15};
     std::vector<int> Data(Size, 0);
 
-    sycl::buffer<int> RefBuf(ReferenceData.data(), sycl::range<1>(Size));
-    sycl::buffer<int> DataBuf(Data.data(), sycl::range<1>(Size));
+    {
+      sycl::buffer<int> RefBuf(ReferenceData.data(), sycl::range<1>(Size));
+      sycl::buffer<int> DataBuf(Data.data(), sycl::range<1>(Size));
 
-    sycl::accessor<int, 1, sycl::access::mode::read,
-                   sycl::access::target::device,
-                   sycl::access::placeholder::true_t,
-                   sycl::ext::oneapi::accessor_property_list<>>
-        RefAcc(RefBuf);
-    sycl::accessor<int, 1, sycl::access::mode::write,
-                   sycl::access::target::device,
-                   sycl::access::placeholder::true_t,
-                   sycl::ext::oneapi::accessor_property_list<>>
-        DataAcc(DataBuf);
+      sycl::accessor<int, 1, sycl::access::mode::read,
+                    sycl::access::target::device,
+                    sycl::access::placeholder::true_t,
+                    sycl::ext::oneapi::accessor_property_list<>>
+          RefAcc(RefBuf);
+      sycl::accessor<int, 1, sycl::access::mode::write,
+                    sycl::access::target::device,
+                    sycl::access::placeholder::true_t,
+                    sycl::ext::oneapi::accessor_property_list<>>
+          DataAcc(DataBuf);
 
-    Q.copy(RefAcc, DataAcc);
-    Q.wait();
+      Q.copy(RefAcc, DataAcc);
+      Q.wait();
+    }
 
     for (int i = 0; i < Size; ++i) {
       if (ReferenceData[i] != Data[i]) {
