@@ -51,7 +51,7 @@ int main() {
   }
 
   {
-    std::vector<int> ReferenceData = {1, 2, 3, 4, 5};
+    const std::vector<int> ReferenceData = {1, 2, 3, 4, 5};
     std::vector<int> Data(Size, 0);
     std::vector<int> CopyBackData(Size, 0);
 
@@ -90,7 +90,7 @@ int main() {
   }
 
   {
-    std::vector<int> ReferenceData = {2, 4, 6, 8, 10};
+    const std::vector<int> ReferenceData = {2, 4, 6, 8, 10};
     std::shared_ptr<int[]> DataPtr(new int[Size]{0});
     std::shared_ptr<int[]> CopyBackDataPtr(new int[Size]{0});
 
@@ -129,7 +129,7 @@ int main() {
   }
 
   {
-    std::vector<int> ReferenceData = {3, 6, 9, 12, 15};
+    const std::vector<int> ReferenceData = {3, 6, 9, 12, 15};
     std::vector<int> Data(Size, 0);
 
     {
