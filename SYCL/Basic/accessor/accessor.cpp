@@ -979,5 +979,38 @@ int main() {
       assert(v[i] == ((i * 2 + 1) + i));
   }
 
+  // Assignment operator test for 0-dim buffer accessor
+  {
+    using AccT = sycl::accessor<int, 0>;
+    
+    sycl::queue Queue;
+    int Data = 32;
+    sycl::buffer<int, 1> DataBuffer(&Data, sycl::range<1>(1));
+
+    Queue.submit([&](sycl::handler &CGH) {
+      AccT Acc(DataBuffer, CGH);
+      CGH.single_task<class acc_0_dim_assignment>([=]() {
+        Acc = 64;
+      });
+    });
+    Queue.wait();
+    assert(Data == 64);
+  }
+
+  // Assignment operator test for 0-dim local accessor
+  {
+    using LocalAccT = sycl::local_accessor<int, 0>;
+
+    sycl::queue Queue;
+
+    Queue.submit([&](sycl::handler &CGH) {
+      LocalAccT LocalAcc { CGH };
+      CGH.single_task<class local_acc_0_dim_assignment>([=]() {
+        LocalAcc = 64;
+        assert(LocalAcc == 64);
+      });
+    });
+  }
+
   std::cout << "Test passed" << std::endl;
 }
