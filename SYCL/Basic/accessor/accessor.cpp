@@ -982,16 +982,14 @@ int main() {
   // Assignment operator test for 0-dim buffer accessor
   {
     using AccT = sycl::accessor<int, 0>;
-    
+
     sycl::queue Queue;
     int Data = 32;
     sycl::buffer<int, 1> DataBuffer(&Data, sycl::range<1>(1));
 
     Queue.submit([&](sycl::handler &CGH) {
       AccT Acc(DataBuffer, CGH);
-      CGH.single_task<class acc_0_dim_assignment>([=]() {
-        Acc = 64;
-      });
+      CGH.single_task<class acc_0_dim_assignment>([=]() { Acc = 64; });
     });
     Queue.wait();
     assert(Data == 64);
