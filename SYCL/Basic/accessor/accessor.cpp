@@ -1004,7 +1004,7 @@ int main() {
     sycl::queue Queue;
 
     Queue.submit([&](sycl::handler &CGH) {
-      LocalAccT LocalAcc { CGH };
+      LocalAccT LocalAcc(CGH);
       CGH.single_task<class local_acc_0_dim_assignment>([=]() {
         LocalAcc = 64;
         assert(LocalAcc == 64);
