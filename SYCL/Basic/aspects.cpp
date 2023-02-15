@@ -93,9 +93,6 @@ int main() {
     if (plt.has(aspect::usm_atomic_shared_allocations)) {
       std::cout << "  USM atomic shared allocations" << std::endl;
     }
-    if (plt.has(aspect::usm_restricted_shared_allocations)) {
-      std::cout << "  USM restricted shared allocations" << std::endl;
-    }
     if (plt.has(aspect::usm_system_allocator)) {
       std::cout << "  USM system allocator" << std::endl;
     }
