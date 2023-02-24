@@ -38,14 +38,14 @@ int main() {
   auto ExpectedKernelNumArgs =
       ExpectedKernel.get_info<sycl::info::kernel::num_args>();
 
-  auto FoundKernelAttrs =
-      FoundKernel.get_info<sycl::info::kernel::attributes>();
-  auto ExpectedKernelAttrs =
-      ExpectedKernel.get_info<sycl::info::kernel::attributes>();
+  auto FoundKernelContext =
+      FoundKernel.get_info<sycl::info::kernel::context>();
+  auto ExpectedKernelContext =
+      ExpectedKernel.get_info<sycl::info::kernel::context>();
 
   assert(FoundKernelName == ExpectedKernelName);
   assert(FoundKernelNumArgs == ExpectedKernelNumArgs);
-  assert(FoundKernelAttrs == ExpectedKernelAttrs);
+  assert(FoundKernelContext == ExpectedKernelContext);
   assert(FoundKernel.get_kernel_bundle() == ExpectedKernel.get_kernel_bundle());
 
   return 0;
