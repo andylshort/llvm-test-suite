@@ -38,8 +38,7 @@ int main() {
   auto ExpectedKernelNumArgs =
       ExpectedKernel.get_info<sycl::info::kernel::num_args>();
 
-  auto FoundKernelContext =
-      FoundKernel.get_info<sycl::info::kernel::context>();
+  auto FoundKernelContext = FoundKernel.get_info<sycl::info::kernel::context>();
   auto ExpectedKernelContext =
       ExpectedKernel.get_info<sycl::info::kernel::context>();
 
