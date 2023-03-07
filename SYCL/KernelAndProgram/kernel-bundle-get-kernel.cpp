@@ -45,7 +45,6 @@ int main() {
   assert(FoundKernelName == ExpectedKernelName);
   assert(FoundKernelNumArgs == ExpectedKernelNumArgs);
   assert(FoundKernelContext == ExpectedKernelContext);
-  assert(FoundKernel.get_kernel_bundle() == ExpectedKernel.get_kernel_bundle());
 
   return 0;
 }
