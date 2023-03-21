@@ -35,7 +35,7 @@ int main(int argc, char **argv) {
 
   int pltCount = 1;
   for (const auto &plt : platform::get_platforms()) {
-    if (!plt.has(aspect::host)) {
+    if (!plt.has(aspect::cpu)) {
       int devCount = 1;
       int totalEUs = 0;
       int numSlices = 0;
