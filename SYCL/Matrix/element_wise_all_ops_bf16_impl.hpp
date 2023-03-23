@@ -21,9 +21,8 @@ public:
 };
 
 template <typename T, size_t M, size_t N>
-void assert_ops_ref(
-    accessor<T, 2, access::mode::read, access::target::host_buffer> C,
-    const float ref) {
+void assert_ops_ref(host_accessor<T, 2, access::mode::read> C,
+                    const float ref) {
   for (size_t i = 0; i < M; i++)
     for (size_t j = 0; j < N; j++) {
       auto diff = make_fp32(C[i][j]) - ref;
@@ -51,7 +50,8 @@ void matrix_verify_add(queue q, big_matrix<T, M, N> &A, nd_range<2> &r,
 
            joint_matrix_fill(sg, sub_a, bfloat16(5.0));
 
-           auto wi_slice_a = get_wi_data(sg, sub_a);
+           auto wi_slice_a =
+               sycl::ext::intel::experimental::matrix::get_wi_data(sg, sub_a);
            for (int i = 0; i < wi_slice_a.length(); i++) {
              wi_slice_a[i] = wi_slice_a[i] + bfloat16(2);
            }
@@ -63,7 +63,7 @@ void matrix_verify_add(queue q, big_matrix<T, M, N> &A, nd_range<2> &r,
                N);
          }); // parallel for
    }).wait();
-  assert_ops_ref<T, M, N>(bufA.get_access<access::mode::read>(), ref);
+  assert_ops_ref<T, M, N>(bufA.get_host_access(read_only), ref);
 }
 
 template <typename T, size_t M, size_t N>
@@ -86,7 +86,8 @@ void matrix_verify_sub(queue q, big_matrix<T, M, N> &A, nd_range<2> &r,
 
            joint_matrix_fill(sg, sub_a, bfloat16(5.0));
 
-           auto wi_slice_a = get_wi_data(sg, sub_a);
+           auto wi_slice_a =
+               sycl::ext::intel::experimental::matrix::get_wi_data(sg, sub_a);
            for (int i = 0; i < wi_slice_a.length(); i++) {
              wi_slice_a[i] = wi_slice_a[i] - bfloat16(2);
            }
@@ -97,7 +98,7 @@ void matrix_verify_sub(queue q, big_matrix<T, M, N> &A, nd_range<2> &r,
                N);
          }); // parallel for
    }).wait();
-  assert_ops_ref<T, M, N>(bufA.get_access<access::mode::read>(), ref);
+  assert_ops_ref<T, M, N>(bufA.get_host_access(read_only), ref);
 }
 
 template <typename T, size_t M, size_t N>
@@ -119,7 +120,8 @@ void matrix_verify_mul(queue q, big_matrix<T, M, N> &A, nd_range<2> &r,
            joint_matrix<sub_group, T, use::a, TM, TK, layout::row_major> sub_a;
            joint_matrix_fill(sg, sub_a, bfloat16(5.0));
 
-           auto wi_slice_a = get_wi_data(sg, sub_a);
+           auto wi_slice_a =
+               sycl::ext::intel::experimental::matrix::get_wi_data(sg, sub_a);
            for (int i = 0; i < wi_slice_a.length(); i++) {
              wi_slice_a[i] = wi_slice_a[i] * bfloat16(3.0);
            }
@@ -130,7 +132,7 @@ void matrix_verify_mul(queue q, big_matrix<T, M, N> &A, nd_range<2> &r,
                N);
          }); // parallel for
    }).wait();
-  assert_ops_ref<T, M, N>(bufA.get_access<access::mode::read>(), ref);
+  assert_ops_ref<T, M, N>(bufA.get_host_access(read_only), ref);
 }
 
 template <typename T, size_t M, size_t N>
@@ -153,7 +155,8 @@ void matrix_verify_div(queue q, big_matrix<T, M, N> &A, nd_range<2> &r,
 
            joint_matrix_fill(sg, sub_a, bfloat16(4.0));
 
-           auto wi_slice_a = get_wi_data(sg, sub_a);
+           auto wi_slice_a =
+               sycl::ext::intel::experimental::matrix::get_wi_data(sg, sub_a);
            for (int i = 0; i < wi_slice_a.length(); i++) {
              wi_slice_a[i] = wi_slice_a[i] / bfloat16(2.0);
            }
@@ -164,7 +167,7 @@ void matrix_verify_div(queue q, big_matrix<T, M, N> &A, nd_range<2> &r,
                N);
          }); // parallel for
    }).wait();
-  assert_ops_ref<T, M, N>(bufA.get_access<access::mode::read>(), ref);
+  assert_ops_ref<T, M, N>(bufA.get_host_access(read_only), ref);
 }
 
 template <typename T, size_t M, size_t N>
@@ -186,7 +189,8 @@ void matrix_verify_logic(queue q, big_matrix<T, M, N> &A, nd_range<2> &r,
 
            joint_matrix_fill(sg, sub_a, bfloat16(5.0));
 
-           auto wi_slice_a = get_wi_data(sg, sub_a);
+           auto wi_slice_a =
+               sycl::ext::intel::experimental::matrix::get_wi_data(sg, sub_a);
            for (int i = 0; i < wi_slice_a.length(); i++) {
              if (wi_slice_a[i]) {
                if (wi_slice_a[i] > bfloat16(2.0) ||
@@ -216,7 +220,7 @@ void matrix_verify_logic(queue q, big_matrix<T, M, N> &A, nd_range<2> &r,
                N);
          }); // parallel for
    }).wait();
-  assert_ops_ref<T, M, N>(bufA.get_access<access::mode::read>(), ref);
+  assert_ops_ref<T, M, N>(bufA.get_host_access(read_only), ref);
 }
 
 static constexpr size_t MATRIX_M = TM * 2;

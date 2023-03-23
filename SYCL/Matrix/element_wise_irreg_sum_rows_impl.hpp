@@ -12,10 +12,8 @@ public:
 };
 
 template <typename T, size_t M, size_t N>
-void sum_rows_ref(
-    accessor<T, 2, access::mode::read, access::target::host_buffer> B,
-    accessor<int, 1, access::mode::read, access::target::host_buffer>
-        sum_rows) {
+void sum_rows_ref(host_accessor<T, 2, access::mode::read> B,
+                  host_accessor<int, 1, access::mode::read> sum_rows) {
   int sum_rows_ref[M] = {0};
   for (size_t i = 0; i < M; i++) {
     for (size_t j = 0; j < N; j++) {
@@ -59,7 +57,8 @@ void matrix_sum_rows(queue q, big_matrix<T, M, N> &B, nd_range<2> &r) {
            // (tK/4)
            int32_t sum_local_rows[M] = {0}; // 8 local rows, M total
            // sub_b has 32x8 elements, 32 elements per WI, 4 per WI per row
-           auto data = get_wi_data(sg, sub_b);
+           auto data =
+               sycl::ext::intel::experimental::matrix::get_wi_data(sg, sub_b);
 
            // each WI calculates local sum of rows
            for (int row = 0; row < TK / 4; row++) { // there are 8 rows
@@ -80,8 +79,8 @@ void matrix_sum_rows(queue q, big_matrix<T, M, N> &B, nd_range<2> &r) {
            }
          }); // parallel for
    }).wait();
-  sum_rows_ref<T, M, N>(bufB.get_access<access::mode::read>(),
-                        sum_rows_v.get_access<access::mode::read>());
+  sum_rows_ref<T, M, N>(bufB.get_host_access(read_only),
+                        sum_rows_v.get_host_access(read_only));
 }
 
 static constexpr size_t MATRIX_K = TK / 4 * 2;
