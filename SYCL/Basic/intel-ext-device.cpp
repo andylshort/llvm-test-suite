@@ -72,8 +72,7 @@ int main(int argc, char **argv) {
             std::cout << "Number of EUs = " << totalEUs << std::endl;
           }
           if (dev.has(aspect::ext_intel_gpu_eu_simd_width)) {
-            int w =
-                dev.get_info<ext::intel::info::device::gpu_eu_simd_width>();
+            int w = dev.get_info<ext::intel::info::device::gpu_eu_simd_width>();
             std::cout << "EU SIMD width = " << w << std::endl;
           }
           if (dev.has(aspect::ext_intel_gpu_slices)) {
@@ -94,8 +93,8 @@ int main(int argc, char **argv) {
           }
           if (SYCL_EXT_INTEL_DEVICE_INFO >= 3 &&
               dev.has(aspect::ext_intel_gpu_hw_threads_per_eu)) {
-            numHWThreadsPerEU = dev.get_info<
-                ext::intel::info::device::gpu_hw_threads_per_eu>();
+            numHWThreadsPerEU =
+                dev.get_info<ext::intel::info::device::gpu_hw_threads_per_eu>();
             std::cout << "Number of HW threads per EU = " << numHWThreadsPerEU
                       << std::endl;
           }
@@ -122,8 +121,7 @@ int main(int argc, char **argv) {
           }
           if (SYCL_EXT_INTEL_DEVICE_INFO >= 5 &&
               dev.has(aspect::ext_intel_device_id)) {
-            int deviceID =
-                dev.get_info<ext::intel::info::device::device_id>();
+            int deviceID = dev.get_info<ext::intel::info::device::device_id>();
             std::cout << "Device ID = " << deviceID << std::endl;
           }
         } // SYCL_EXT_INTEL_DEVICE_INFO
@@ -131,22 +129,19 @@ int main(int argc, char **argv) {
 
 // Check if this experimental feature is supported
 #ifdef SYCL_EXT_ONEAPI_MAX_WORK_GROUP_QUERY
-      sycl::id<1> groupD =
-          dev.get_info<sycl::ext::oneapi::experimental::info::device::
-                            max_work_groups<1>>();
+      sycl::id<1> groupD = dev.get_info<
+          sycl::ext::oneapi::experimental::info::device::max_work_groups<1>>();
       std::cout << "Max work group size in 1D \n";
       std::cout << "Dimension 1:" << groupD[0] << std::endl;
 
-      sycl::id<2> group2D =
-          dev.get_info<sycl::ext::oneapi::experimental::info::device::
-                            max_work_groups<2>>();
+      sycl::id<2> group2D = dev.get_info<
+          sycl::ext::oneapi::experimental::info::device::max_work_groups<2>>();
       std::cout << "Max work group size in 2D \n";
       std::cout << "Dimension 1:" << group2D[0] << "\n"
                 << "Dimension 2:" << group2D[1] << std::endl;
 
-      sycl::id<3> group3D =
-          dev.get_info<sycl::ext::oneapi::experimental::info::device::
-                            max_work_groups<3>>();
+      sycl::id<3> group3D = dev.get_info<
+          sycl::ext::oneapi::experimental::info::device::max_work_groups<3>>();
       std::cout << "Max work group size in 3D \n";
       std::cout << "Dimension 1:" << group3D[0] << "\n"
                 << "Dimension 2:" << group3D[1] << "\n"
@@ -158,8 +153,8 @@ int main(int argc, char **argv) {
 
       assert((group3D[0] <= group_max && group3D[1] <= group_max &&
               group3D[2] <= group_max) &&
-              "Max work-group size of each dimension must be smaller than "
-              "global work-group size");
+             "Max work-group size of each dimension must be smaller than "
+             "global work-group size");
 #endif
 
       std::cout << std::endl;

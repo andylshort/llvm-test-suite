@@ -81,8 +81,8 @@ int main(int argc, char **argv) {
             std::cout << "Number of slices = " << numSlices << std::endl;
           }
           if (dev.has(aspect::ext_intel_gpu_subslices_per_slice)) {
-            numSubslices = dev.get_info<
-                info::device::ext_intel_gpu_subslices_per_slice>();
+            numSubslices =
+                dev.get_info<info::device::ext_intel_gpu_subslices_per_slice>();
             std::cout << "Number of subslices per slice = " << numSubslices
                       << std::endl;
           }
@@ -100,8 +100,7 @@ int main(int argc, char **argv) {
           }
           if (dev.has(aspect::ext_intel_max_mem_bandwidth)) {
             // not supported yet
-            long m =
-                dev.get_info<info::device::ext_intel_max_mem_bandwidth>();
+            long m = dev.get_info<info::device::ext_intel_max_mem_bandwidth>();
             std::cout << "Maximum memory bandwidth = " << m << std::endl;
           }
           // This is the only data we can verify.
